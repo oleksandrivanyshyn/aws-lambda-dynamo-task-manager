@@ -6,6 +6,10 @@
     "@aws-sdk/client-dynamodb": "^3.585.0",
     "@aws-sdk/lib-dynamodb": "^3.585.0",
     "express": "^5.2.1",
-    "serverless-http": "^4.0.0"
+    "serverless-http": "^4.0.0",
+    "uuid": "^14.0.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6"
   }
 }
