@@ -1,20 +1,11 @@
-# "service" is the name of this project. This will also be added to your AWS resource names.
-service: task-manager-api
+service: final-aws-node-todo
 
 frameworkVersion: "4"
 
-stages:
-  default:
-    params:
-      tableName: "users-table-${sls:stage}"
-
 provider:
   name: aws
-  runtime: nodejs24.x
-  architecture: arm64
-  # Uncomment to easily set up a custom domain. Read the docs for more details:
-  # https://www.serverless.com/framework/docs/providers/aws/guide/domains
-  # domain: api.example.com
+  runtime: nodejs20.x
+  region: us-east-1
   iam:
     role:
       statements:
@@ -27,26 +18,29 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - Fn::GetAtt: [UsersTable, Arn]
+            - Fn::GetAtt: [ TodosTable, Arn ]
   environment:
-    USERS_TABLE: ${param:tableName}
+    TODO_TABLE: todos-table-${sls:stage}
 
 functions:
-  api:
-    handler: handler.handler
+  create:
+    handler: handler/createTodo.createTodo
     events:
-      - httpApi: "*"
+      - http:
+          path: todos
+          method: post
+          cors: true
 
 resources:
   Resources:
-    UsersTable:
+    TodosTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: userId
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: userId
+          - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-        TableName: ${param:tableName}
+        TableName: todos-table-${sls:stage}
