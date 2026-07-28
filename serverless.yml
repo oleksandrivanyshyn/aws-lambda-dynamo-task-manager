@@ -44,6 +44,13 @@ functions:
           path: todos/{id}
           method: get
           cors: true
+  delete:
+    handler: handler/deleteTodo.deleteTodo
+    events:
+      - http:
+          path: todos/delete/{id}
+          method: delete
+          cors: true
 
 resources:
   Resources:
